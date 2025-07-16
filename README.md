@@ -68,13 +68,13 @@ echo '127.0.0.1 example.com request.example.com' >> 'C:\Windows\System32\drivers
 
 Переходим на [`request.example.com`](http://request.example.com) - это простая страница, которая показывает текущий origin и позволяет отправить fetch на другой.
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715133549.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715133549.png)
 
 Несмотря на то, что `request.example.com` и `example.com` похожи, браузер считает их **разными источниками**, так как их доменное имя отличается.
 
 Нажимаем кнопку и запрос уходит. Переходим на [`example.com`](http://example.com/). Это простой логгер запросов. Среди всех запросов видим наш fetch c `request.example.com`
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715133607.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715133607.png)
 
 То есть SOP не защитил нас от отправки запроса. Иначе говоря, теоретически, мы могли бы отправить какой-нибудь сложный запрос на API с прикрепленными cookie и он бы сработал.
 
@@ -104,7 +104,7 @@ document.getElementById('origin').textContent = window.location.origin;
 
 Открываем DevTools и получаем ошибку. Так SOP рубит любые попытки JS заглянуть в другой origin.
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715142044.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715142044.png)
 
 Можно ли обойти эти правила только на уровне SOP? Да, при соблюдении жестких условий.
 1. Оба ресурса имеют общий домен второго уровня
@@ -117,7 +117,7 @@ document.getElementById('origin').textContent = window.location.origin;
 
 Заходим в DevTools и видим содержимое `example.com/` в консоли
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715142257.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715142257.png)
 
 ### 2. CORS
 
@@ -149,7 +149,7 @@ fetch("http://example.com")
 
 Заходим в DevTools и ловим ошибку  "*blocked by CORS policy*".
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715154409.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715154409.png)
 
 Нужно сконфигурировать веб-сервер на выдачу нужного заголовка. Заходим в `nginx/example.com.conf` и добавляем строку в блок `location /`
 
@@ -159,7 +159,7 @@ add_header Access-Control-Allow-Origin "http://request.example.com";
 
 Сохраняем, ребутаем и перезагружаем страницу. Содержимое `example.com` теперь в консоли.
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715154523.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715154523.png)
 
 #### 🌐 Preflight
 Когда браузер сомневается в безопасности запроса, он отправляет `OPTION` серверу, чтобы узнать, можно ли отправить основной запрос. Такой механизм называется **Preflight-запросом**
@@ -266,7 +266,7 @@ Content-Security-Policy: policy
 alert('Script from request.example.com!')
 ```
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715155914.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715155914.png)
 
 Предположим, нас это не устраивает такой расклад и мы хотим ограничить доступ к ресурсам с любых источников, включая текущий. А еще было бы неплохо как то перехватывать результаты блокировки, благо CSP поддерживает обе эти функции.
 
@@ -299,7 +299,7 @@ add_header Content-Security-Policy "default-src 'none'; report-uri /csp-report" 
 
 Перезагружаем страницу и замечаем, что алерты не прогрузились, а на `/csp-report` появились два сообщения 
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715160632.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715160632.png)
 
 Попробуем разрешить скрипт с `request.example.com`. Для этого немного поменяем заголовок и добавим нужный origin в `script-src`
 
@@ -307,18 +307,18 @@ add_header Content-Security-Policy "default-src 'none'; report-uri /csp-report" 
 add_header Content-Security-Policy "default-src 'none'; script-src request.example.com; report-uri /csp-report" always;
 ```
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715160802.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715160802.png)
 
 Перезагружаем страницу - первый алерт сработал. Попробуем разрешить второй, добавив его sha-256 в script-src (узнать ее можно в DevTools).
 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715160946.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715160946.png)
 
 ```nginx
 add_header Content-Security-Policy "default-src 'none'; script-src request.example.com 'sha256-F5wVOASaeLmy5Wq+L0Mii6PNmvrUW0jLgD8sm1+UFbk='; report-uri /csp-report" always;
 ```
 
 Видим второй алерт и радуемся. 
-![](https://github.com/zhabii/sop-cors-csp/blob/master/img/Pasted%20image%2020250715161112.png)
+![](https://github.com/zhabii/sop-cors-csp/blob/main/img/Pasted%20image%2020250715161112.png)
 
 Аналогичным образом настраиваются любые другие ресурсы: медиа, скрипты, стили и прочее. 
 
