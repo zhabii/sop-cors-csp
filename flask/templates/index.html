@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>sop logger</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <h1>Всего заходов: <span>{{ count }}</span></h1>
+  <h2>Последние 30 запросов:</h2>
+  <pre>
+    {% for line in lines %}
+      {{ line }}
+    {% endfor %}
+  </pre>
+
+  <script>
+    document.domain = 'example.com'
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>sop fetch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>Текущий origin: <code id="origin"></code></h1>
+  <button onclick="fetch('http://example.com')">Сделать fetch на http://example.com/</button>
+  
+  <script>
+    document.getElementById('origin').textContent = window.location.origin;
+  </script>
+</body>
+</html>

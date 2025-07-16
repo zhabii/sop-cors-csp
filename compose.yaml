@@ -1,0 +1,17 @@
+services:
+  nginx:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./static:/usr/share/nginx/html:ro
+    restart: on-failure
+    depends_on:
+      - flask
+  flask:
+    build: ./flask/
+    expose:
+      - 5000
+    restart: on-failure
+    
